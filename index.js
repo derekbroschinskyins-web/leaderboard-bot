@@ -21,14 +21,31 @@ const DEAL_CHANNEL_NAME = 'deal-submissions';
 const HYPE_MESSAGES = [
   "LET'S GO! 🔥 Another one in the books!",
   "DEALS ON DEALS! 💰 Keep it coming!",
-  "TOP ONE PERCENT ENERGY! 👑",
+  "THATS THE MTRO WAY 👑",
   "That's what we're talking about! 🚀",
   "Another day, another deal! 💪",
   "The grind doesn't stop! 🏆",
   "MONEY IN THE BANK! 💵",
-  "That's how we do it at T1P! 🔱",
+  "That's how we do it at MTRO! 🔱",
   "Somebody stop them! 😤",
   "The machine keeps running! ⚙️",
+"METRO MOVES DIFFERENT! 🏙️",
+"The city is watching! 👀",
+"ANOTHER ONE FOR METRO! 💰",
+"Built different, paid different! 💵",
+"Metro never sleeps! 🌆",
+"That's Metro business! 🤝",
+"The machine never stops! ⚙️",
+"LOCKED IN AND LOCKED OUT! 🔒",
+"Champions log deals, losers make excuses! 👑",
+"We don't miss at Metro! 🎯",
+"Another policy, another step to the top! 🚀",
+"METRO ON TOP ALWAYS! 🏆",
+"That's what separates us! 💪",
+"Easy day for a Metro agent! 😤",
+"The scoreboard doesn't lie! 📊"
+
+
 ];
 
 function getWeekStart() {
@@ -79,7 +96,7 @@ async function buildLeaderboard() {
   const { data: monthData } = await supabase.from('deals').select('agent_name, amount').gte('created_at', getMonthStart());
 
   return new EmbedBuilder()
-    .setTitle('🏆 TOP ONE PERCENT — Leaderboard')
+    .setTitle('🏆 METRO — Leaderboard')
     .setColor(0xFFD700)
     .addFields(
       { name: '📅 This Week', value: formatRows(tally(weekData)) },
@@ -105,7 +122,7 @@ async function updateLeaderboard() {
 }
 
 function getMilestoneMessage(amount, mention) {
-  if (amount >= 50000) return `🏔️ **$50,000 MTD!!** ${mention} is an ABSOLUTE MONSTER! TOP ONE PERCENT FOR REAL! 👑`;
+  if (amount >= 50000) return `🏔️ **$50,000 MTD!!** ${mention} is an ABSOLUTE MONSTER! On that Prime TVL timing! 👑`;
   if (amount >= 40000) return `💎 **$40,000 MTD!** ${mention} is playing a different game! 🔥`;
   if (amount >= 30000) return `🚀 **$30,000 MTD!** ${mention} is on FIRE this month! Keep pushing!`;
   if (amount >= 20000) return `⚡ **$20,000 MTD!** ${mention} is locked in! Half way to legendary!`;
@@ -125,7 +142,7 @@ async function postDailySummary(guild) {
     const monthTotal = monthRows.reduce((s, [, a]) => s + a, 0);
 
     const embed = new EmbedBuilder()
-      .setTitle('📊 Daily Summary — TOP ONE PERCENT')
+      .setTitle('📊 Daily Summary — METRO')
       .setColor(0xFFD700)
       .addFields(
         { name: '☀️ Today\'s Production', value: formatRows(todayRows) || 'No deals today' },
@@ -147,7 +164,7 @@ async function postWeeklyRecap(guild) {
     const weekTotal = weekRows.reduce((s, [, a]) => s + a, 0);
 
     const embed = new EmbedBuilder()
-      .setTitle('🏁 Weekly Recap — TOP ONE PERCENT')
+      .setTitle('🏁 Weekly Recap — METRO')
       .setColor(0xFFD700)
       .addFields(
         { name: '📅 This Week\'s Rankings', value: formatRows(weekRows) || 'No deals this week' },
