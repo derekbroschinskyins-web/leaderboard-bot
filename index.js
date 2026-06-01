@@ -130,7 +130,7 @@ client.on('messageCreate', async (message) => {
   const embed = await buildLeaderboard();
 
   // Find leaderboard channel and update
-  const lbChannel = message.guild.channels.cache.find(c => c.name === 'leaderboard');
+  const lbChannel = message.guild.channels.cache.get('1508588078090948608');
   if (!lbChannel) return;
 
   const messages = await lbChannel.messages.fetch({ limit: 10 });
