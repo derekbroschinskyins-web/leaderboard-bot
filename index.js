@@ -186,18 +186,7 @@ function scheduleTasks() {
       await postWeeklyRecap(guild);
     }
 
-    // Sunday midnight MT reset = Monday 06:00 UTC
-    if (utcDay === 1 && utcHour === 6 && utcMin === 0) {
-      await supabase.from('deals').delete().gte('created_at', getWeekStart());
-      console.log('Weekly reset done');
-    }
-
-    // Monthly reset — 1st of month midnight MT
-    if (now.getDate() === 1 && utcHour === 6 && utcMin === 0) {
-      await supabase.from('deals').delete().gte('created_at', getMonthStart());
-      console.log('Monthly reset done');
-    }
-
+   
   }, 60000);
 }
 
@@ -267,4 +256,4 @@ client.on('messageCreate', async (message) => {
   await updateLeaderboard();
 });
 
-client.login(process.env.DISCORD_TOKEN);
+client.login(process.env.DISCORD_TOKEN)
