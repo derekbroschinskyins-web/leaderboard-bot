@@ -86,21 +86,32 @@ function tally(data) {
 function formatRows(rows) {
   if (rows.length === 0) return 'No deals yet';
   const medals = ['🥇', '🥈', '🥉'];
-  return rows.map(([name, amt], i) =>
+  const list = rows.map(([name, amt], i) =>
     `${medals[i] || `${i + 1}.`} **${name}** — $${amt.toLocaleString()}`
   ).join('\n');
+  const total = rows.reduce((s, [, a]) => s + a, 0);
+  return `${list}\n\n**Total: $${total.toLocaleString()}**`;
 }
 
 async function buildLeaderboard() {
   const { data: weekData } = await supabase.from('deals').select('agent_name, amount').gte('created_at', getWeekStart());
   const { data: monthData } = await supabase.from('deals').select('agent_name, amount').gte('created_at', getMonthStart());
 
+  const weekRows = tally(weekData);
+  const monthRows = tally(monthData);
+
+  const weekTotal = weekRows.reduce((s, [, a]) => s + a, 0);
+  const monthTotal = monthRows.reduce((s, [, a]) => s + a, 0);
+
+  const weekValue = formatRows(weekRows) + `\n\n💼 **Team Total: $${weekTotal.toLocaleString()}**`;
+  const monthValue = formatRows(monthRows) + `\n\n💼 **Team Total: $${monthTotal.toLocaleString()}**`;
+
   return new EmbedBuilder()
-    .setTitle('🏆 METRO — Leaderboard')
+    .setTitle('🏆 TOP ONE PERCENT — Leaderboard')
     .setColor(0xFFD700)
     .addFields(
-      { name: '📅 This Week', value: formatRows(tally(weekData)) },
-      { name: '📆 This Month', value: formatRows(tally(monthData)) }
+      { name: '📅 This Week', value: weekValue },
+      { name: '📆 This Month', value: monthValue }
     )
     .setTimestamp();
 }
