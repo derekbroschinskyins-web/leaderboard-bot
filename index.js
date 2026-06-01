@@ -107,7 +107,7 @@ async function buildLeaderboard() {
   const monthValue = formatRows(monthRows) + `\n\n💼 **Team Total: $${monthTotal.toLocaleString()}**`;
 
   return new EmbedBuilder()
-    .setTitle('🏆 TOP ONE PERCENT — Leaderboard')
+    .setTitle('🏆 METRO — Leaderboard')
     .setColor(0xFFD700)
     .addFields(
       { name: '📅 This Week', value: weekValue },
