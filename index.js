@@ -85,7 +85,7 @@ function getWeekStart() {
   mt.setUTCHours(0, 0, 0, 0);
   return new Date(mt.getTime() - mtOffset * 60 * 60 * 1000).toISOString();
 }
-}
+
 
 function parseDollars(message) {
   const matches = message.match(/\$(\d+(?:,\d{3})*(?:\.\d{2})?)/g);
