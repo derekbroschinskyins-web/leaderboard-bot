@@ -63,10 +63,28 @@ function getMonthStart() {
   return new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
 }
 
-function getTodayStart() {
+function getMTMidnight() {
   const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  return now.toISOString();
+  const mtOffset = -6; // MDT (change to -7 Nov–Mar for MST)
+  const mt = new Date(now.getTime() + mtOffset * 60 * 60 * 1000);
+  mt.setHours(0, 0, 0, 0);
+  return new Date(mt.getTime() - mtOffset * 60 * 60 * 1000).toISOString();
+}
+
+function getTodayStart() {
+  return getMTMidnight();
+}
+
+function getWeekStart() {
+  const now = new Date();
+  const mtOffset = -6;
+  const mt = new Date(now.getTime() + mtOffset * 60 * 60 * 1000);
+  const day = mt.getUTCDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  mt.setUTCDate(mt.getUTCDate() + diff);
+  mt.setUTCHours(0, 0, 0, 0);
+  return new Date(mt.getTime() - mtOffset * 60 * 60 * 1000).toISOString();
+}
 }
 
 function parseDollars(message) {
