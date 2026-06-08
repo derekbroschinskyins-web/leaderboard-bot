@@ -101,12 +101,13 @@ function tally(data) {
   return Object.entries(map).sort((a, b) => b[1] - a[1]);
 }
 
-function formatRows(rows) {
+function formatRows(rows, dealCounts = {}) {
   if (rows.length === 0) return 'No deals yet';
   const medals = ['🥇', '🥈', '🥉'];
-  const list = rows.map(([name, amt], i) =>
-    `${medals[i] || `${i + 1}.`} **${name}** — $${amt.toLocaleString()}`
-  ).join('\n');
+  const list = rows.map(([name, amt], i) => {
+    const count = dealCounts[name] || 0;
+    return `${medals[i] || `${i + 1}.`} **${name}** — $${amt.toLocaleString()} (${count} deal${count !== 1 ? 's' : ''})`;
+  }).join('\n');
   const total = rows.reduce((s, [, a]) => s + a, 0);
   return `${list}\n\n**Total: $${total.toLocaleString()}**`;
 }
@@ -116,13 +117,16 @@ async function buildLeaderboard() {
   const { data: monthData } = await supabase.from('deals').select('agent_name, amount').gte('created_at', getMonthStart());
 
   const weekRows = tally(weekData);
-  const monthRows = tally(monthData);
+  const monthRows = tally(monthData);const weekCounts = {};
+for (const row of weekData || []) weekCounts[row.agent_name] = (weekCounts[row.agent_name] || 0) + 1;
+const monthCounts = {};
+for (const row of monthData || []) monthCounts[row.agent_name] = (monthCounts[row.agent_name] || 0) + 1;
 
   const weekTotal = weekRows.reduce((s, [, a]) => s + a, 0);
   const monthTotal = monthRows.reduce((s, [, a]) => s + a, 0);
 
-  const weekValue = formatRows(weekRows) + `\n\n💼 **Team Total: $${weekTotal.toLocaleString()}**`;
-  const monthValue = formatRows(monthRows) + `\n\n💼 **Team Total: $${monthTotal.toLocaleString()}**`;
+  const weekValue = formatRows(weekRows, weekCounts) + `\n\n💼 **Team Total: $${weekTotal.toLocaleString()}**`;
+  const monthValue = formatRows(monthRows, monthCounts) + `\n\n💼 **Team Total: $${monthTotal.toLocaleString()}**`;
 
   return new EmbedBuilder()
     .setTitle('🏆 METRO — Leaderboard')
